@@ -1,7 +1,8 @@
 import subprocess
 import mysql.connector
+import hashlib
 
-db = mysql.connector.connect(host="localhost", user="root", password="1101", database="asc_unsecure2")
+db = mysql.connector.connect(host="localhost", user="root", password="1101", database="asc_secure2")
 cursor = db.cursor()
 
 def bash_clear():
@@ -135,7 +136,10 @@ def login():
         else:
             db_password = db_out_pass[0][0]
 
-            if (in_user_name == db_username) and (in_user_password == db_password):
+            hash_object = hashlib.sha256(in_user_password.encode())
+            in_pass_hashed = hash_object.hexdigest()
+
+            if (in_user_name == db_username) and (in_pass_hashed == db_password):
                 if (in_user_name == "admin"):
                     admin_dashboard()
                 else:
